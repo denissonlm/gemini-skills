@@ -1,0 +1,14 @@
+# Ignorar arquivos de log e temporários
+*.log
+*.tmp
+.DS_Store
+
+# Ignorar arquivos do Windows
+Thumbs.db
+desktop.ini
+
+# Ignorar pastas de ambiente virtual e cache do Gemini
+.venv/
+.cache/
+node_modules/
+.gemini/

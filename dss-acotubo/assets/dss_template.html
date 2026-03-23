@@ -1,0 +1,300 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Lista de Presença DSS - Padrão Açotubo Modern</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;900&display=swap');
+        
+        :root {
+            --red-acotubo: #cc0000;
+            --fundo-tema: #fff8f8;
+            --border-thick: 2px solid #cc0000;
+        }
+
+        /* RESET DE SEGURANÇA */
+        * { box-sizing: border-box; -webkit-print-color-adjust: exact; }
+        html, body { margin: 0; padding: 0; background: #e5e5e5; }
+        
+        .page { 
+            width: 210mm; 
+            height: 297mm;
+            padding: 10mm; 
+            margin: 10mm auto; 
+            background: white; 
+            box-shadow: 0 0 20px rgba(0,0,0,0.2); 
+            position: relative;
+            overflow: hidden; /* BLINDAGEM: Nada sai da folha */
+            page-break-after: always;
+        }
+
+        /* HIPER BLINDAGEM: Container Superior Fixo 11.5cm */
+        .header-container {
+            height: 11.5cm;
+            max-height: 11.5cm;
+            display: flex;
+            flex-direction: column;
+            margin-bottom: 5mm;
+            background: #fff;
+            overflow: hidden; /* BLINDAGEM: Impede empurrar a tabela */
+        }
+
+        .header-top {
+            display: flex;
+            width: 100%;
+            padding: 15px 20px;
+            align-items: center;
+            gap: 25px;
+            height: 60px;
+        }
+
+        .logo-box {
+            min-width: 120px; /* BLINDAGEM: Reserva espaço se logo falhar */
+            display: flex;
+            align-items: center;
+        }
+        .logo-box img { max-height: 45px; width: auto; }
+
+        .main-title {
+            flex: 1;
+            font-weight: 900;
+            font-size: 21px;
+            text-transform: uppercase;
+            color: #000;
+            letter-spacing: -0.5px;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis; /* BLINDAGEM: Título imutável */
+        }
+
+        .info-section {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            padding: 0 15px 10px 15px;
+            gap: 10px;
+            height: 85px;
+        }
+
+        .cell { display: flex; flex-direction: column; overflow: hidden; }
+
+        .label {
+            font-size: 8px;
+            font-weight: 700;
+            text-transform: uppercase;
+            color: #888;
+            margin-bottom: 2px;
+        }
+
+        .editable {
+            font-size: 11px;
+            font-weight: 600;
+            color: #000;
+            outline: none;
+            padding: 4px 8px;
+            background: #fdfdfd;
+            border-left: 3px solid var(--red-acotubo);
+            /* BLINDAGEM: Impede quebra de linha na edição manual */
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            max-height: 24px;
+        }
+
+        .theme-strip {
+            background: var(--red-acotubo);
+            color: #fff;
+            padding: 10px;
+            text-align: center;
+            border-top: var(--border-thick);
+            border-bottom: var(--border-thick);
+            height: 60px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        }
+        .theme-strip h2 { margin: 0; font-size: 8px; font-weight: 400; text-transform: uppercase; opacity: 0.9; }
+        .theme-strip p { 
+            margin: 2px 0 0 0; 
+            font-size: 16px; 
+            font-weight: 900; 
+            text-transform: uppercase;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis; /* BLINDAGEM: Tema em uma linha */
+        }
+
+        .content-grid {
+            display: grid;
+            grid-template-columns: 1.4fr 1fr;
+            flex-grow: 1;
+            background: var(--fundo-tema);
+            overflow: hidden;
+        }
+
+        .resumo {
+            padding: 15px;
+            border-right: 1px solid #ffcccc;
+            font-size: 12px;
+            line-height: 1.4;
+            text-align: justify;
+            overflow: hidden; /* BLINDAGEM: Corta texto excedente suavemente */
+        }
+
+        .riscos {
+            padding: 15px;
+            font-size: 11px;
+            overflow: hidden;
+        }
+        .riscos h4 { color: var(--red-acotubo); margin: 0 0 10px 0; font-size: 10px; text-transform: uppercase; border-bottom: 1px solid #ffcccc; padding-bottom: 4px; }
+        .riscos ul { margin: 0; padding-left: 18px; }
+        .riscos li { margin-bottom: 4px; font-weight: 600; }
+
+        /* TABELA DE ASSINATURAS BLINDADA */
+        .sig-table {
+            width: 100%;
+            border-collapse: collapse;
+            border: 2px solid #000;
+            table-layout: fixed; /* BLINDAGEM: Larguras fixas */
+        }
+        .sig-table th {
+            background: #000;
+            color: #fff;
+            padding: 7px;
+            font-size: 10px;
+            text-transform: uppercase;
+            text-align: left;
+            height: 30px;
+        }
+        .sig-table td {
+            height: 0.8cm !important; /* BLINDAGEM: Altura absoluta */
+            max-height: 0.8cm;
+            border: 1px solid #ccc;
+            padding: 0 10px;
+            overflow: hidden;
+            white-space: nowrap;
+        }
+        .re-col { width: 40mm; border-right: 2px solid #000 !important; font-weight: 700; background: #fafafa; }
+
+        .footer-id {
+            position: absolute;
+            bottom: 5mm;
+            left: 10mm;
+            right: 10mm;
+            display: flex;
+            justify-content: space-between;
+            font-size: 7px;
+            font-weight: 700;
+            color: #999;
+            text-transform: uppercase;
+        }
+
+        @media print {
+            body { background: #fff; }
+            .page { margin: 0; box-shadow: none; border: none; }
+        }
+    </style>
+</head>
+<body>
+
+<div class="page">
+    <div class="header-container">
+        <div class="header-top">
+            <div class="logo-box">
+                <img src="C:\Users\denisson.monteiro\OneDrive - Grupo Açotubo\0 SESMT\Organizar\SESMT_v1\SESMT\Ocorrência Indesejada\Gestão 2026\01 Fluxo, indicadores e templates\Logo.png" alt="Logo Açotubo">
+            </div>
+            <div class="main-title">Diálogo de Segurança (DS) | Lista de Presença</div>
+        </div>
+
+        <div class="info-section">
+            <div class="cell">
+                <span class="label">Divisão:</span>
+                <div class="editable" contenteditable="true">Filiais / Inox Guarulhos</div>
+            </div>
+            <div class="cell">
+                <span class="label">Responsável Local:</span>
+                <div class="editable" contenteditable="true">Supervisor / Encarregado</div>
+            </div>
+            <div class="cell">
+                <span class="label">Data / Horário:</span>
+                <div class="editable" contenteditable="true">{{DATA}} - 07:30h</div>
+            </div>
+            <div class="cell">
+                <span class="label">Responsável SESMT:</span>
+                <div class="editable" contenteditable="false">Denisson Monteiro</div>
+            </div>
+        </div>
+
+        <div class="theme-strip">
+            <h2>Tema do Diálogo:</h2>
+            <p>{{TEMA}}</p>
+        </div>
+
+        <div class="content-grid">
+            <div class="resumo">
+                <span class="label" style="display: block; margin-bottom: 8px; color: var(--red-acotubo);">Resumo Comportamental:</span>
+                {{RESUMO}}
+            </div>
+            <div class="riscos">
+                <h4>⚠️ Riscos Identificados:</h4>
+                <ul>
+                    {{RISCOS_HTML}}
+                </ul>
+            </div>
+        </div>
+    </div>
+
+    <table class="sig-table">
+        <thead>
+            <tr>
+                <th class="re-col">R.E. (Registro)</th>
+                <th>Assinatura do Colaborador</th>
+            </tr>
+        </thead>
+        <tbody>
+            <!-- 18 LINHAS FIXAS P1 -->
+            <tr><td class="re-col"></td><td></td></tr><tr><td class="re-col"></td><td></td></tr><tr><td class="re-col"></td><td></td></tr>
+            <tr><td class="re-col"></td><td></td></tr><tr><td class="re-col"></td><td></td></tr><tr><td class="re-col"></td><td></td></tr>
+            <tr><td class="re-col"></td><td></td></tr><tr><td class="re-col"></td><td></td></tr><tr><td class="re-col"></td><td></td></tr>
+            <tr><td class="re-col"></td><td></td></tr><tr><td class="re-col"></td><td></td></tr><tr><td class="re-col"></td><td></td></tr>
+            <tr><td class="re-col"></td><td></td></tr><tr><td class="re-col"></td><td></td></tr><tr><td class="re-col"></td><td></td></tr>
+            <tr><td class="re-col"></td><td></td></tr><tr><td class="re-col"></td><td></td></tr><tr><td class="re-col"></td><td></td></tr>
+        </tbody>
+    </table>
+    <div class="footer-id">
+        <span>Grupo Açotubo - SESMT</span>
+        <span>MOD: SESMT-001 | Página 1 / 2</span>
+    </div>
+</div>
+
+<div class="page">
+    <div class="theme-strip" style="border: var(--border-thick); margin-bottom: 5mm; height: 40px;">
+        <p style="font-size: 13px;">CONTINUAÇÃO: {{TEMA}}</p>
+    </div>
+    <table class="sig-table">
+        <thead>
+            <tr>
+                <th class="re-col">R.E. (Registro)</th>
+                <th>Assinatura do Colaborador (Continuação)</th>
+            </tr>
+        </thead>
+        <tbody>
+            <!-- 32 LINHAS FIXAS P2 -->
+            <tr><td class="re-col"></td><td></td></tr><tr><td class="re-col"></td><td></td></tr><tr><td class="re-col"></td><td></td></tr><tr><td class="re-col"></td><td></td></tr>
+            <tr><td class="re-col"></td><td></td></tr><tr><td class="re-col"></td><td></td></tr><tr><td class="re-col"></td><td></td></tr><tr><td class="re-col"></td><td></td></tr>
+            <tr><td class="re-col"></td><td></td></tr><tr><td class="re-col"></td><td></td></tr><tr><td class="re-col"></td><td></td></tr><tr><td class="re-col"></td><td></td></tr>
+            <tr><td class="re-col"></td><td></td></tr><tr><td class="re-col"></td><td></td></tr><tr><td class="re-col"></td><td></td></tr><tr><td class="re-col"></td><td></td></tr>
+            <tr><td class="re-col"></td><td></td></tr><tr><td class="re-col)</td><td></td></tr><tr><td class="re-col"></td><td></td></tr><tr><td class="re-col"></td><td></td></tr>
+            <tr><td class="re-col"></td><td></td></tr><tr><td class="re-col"></td><td></td></tr><tr><td class="re-col"></td><td></td></tr><tr><td class="re-col"></td><td></td></tr>
+            <tr><td class="re-col"></td><td></td></tr><tr><td class="re-col"></td><td></td></tr><tr><td class="re-col"></td><td></td></tr><tr><td class="re-col"></td><td></td></tr>
+            <tr><td class="re-col"></td><td></td></tr><tr><td class="re-col"></td><td></td></tr><tr><td class="re-col"></td><td></td></tr><tr><td class="re-col"></td><td></td></tr>
+        </tbody>
+    </table>
+    <div class="footer-id">
+        <span>Grupo Açotubo - SESMT</span>
+        <span>MOD: SESMT-001 | Página 2 / 2</span>
+    </div>
+</div>
+
+</body>
+</html>

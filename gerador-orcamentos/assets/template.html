@@ -1,0 +1,371 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Proposta Executiva Premium - Kelly Lopes</title>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=Playfair+Display:wght@700;900&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary: #CC0000;
+            --secondary: #121212;
+            --silver: #E0E0E0;
+            --white: #FFFFFF;
+            --text-main: #2D3436;
+            --text-muted: #636E72;
+            --bg-body: #F0F2F5;
+            --border-radius: 12px;
+            --shadow: 0 15px 35px rgba(0,0,0,0.1);
+        }
+
+        * { box-sizing: border-box; -webkit-print-color-adjust: exact; }
+
+        body {
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            margin: 0; padding: 0;
+            background-color: var(--bg-body);
+            color: var(--text-main);
+        }
+
+        .page {
+            width: 297mm;
+            min-height: 210mm;
+            padding: 15mm;
+            margin: 10mm auto;
+            background: var(--white);
+            box-shadow: var(--shadow);
+            position: relative;
+            border-left: 10px solid var(--primary);
+            display: flex;
+            flex-direction: column;
+        }
+
+        @media print {
+            @page { size: landscape; margin: 0; }
+            body { background: none; }
+            .page { margin: 0; box-shadow: none; width: 297mm; height: 210mm; }
+            .no-print { display: none !important; }
+        }
+
+        header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 30px;
+            padding-bottom: 20px;
+            border-bottom: 2px solid var(--bg-body);
+        }
+
+        .brand-box .brand {
+            font-family: 'Playfair Display', serif;
+            font-size: 2.2rem;
+            color: var(--secondary);
+            font-weight: 900;
+            line-height: 1;
+        }
+        .brand span { color: var(--primary); }
+        .tagline {
+            font-size: 0.8rem;
+            color: var(--primary);
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 3px;
+            margin-top: 5px;
+        }
+
+        .doc-meta { text-align: right; }
+        .doc-label {
+            background: var(--secondary);
+            color: var(--silver);
+            padding: 5px 15px;
+            border-radius: 4px;
+            font-size: 0.75rem;
+            font-weight: 800;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+        }
+
+        .main-content {
+            display: grid;
+            grid-template-columns: 320px 1fr;
+            gap: 30px;
+            flex-grow: 1;
+        }
+
+        .sidebar {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+
+        .black-card {
+            background: var(--secondary) !important;
+            color: var(--white) !important;
+            padding: 22px;
+            border-radius: var(--border-radius);
+            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+            border: none !important;
+        }
+
+        .black-card h3 {
+            color: var(--silver) !important;
+            font-size: 0.75rem;
+            text-transform: uppercase;
+            letter-spacing: 1.5px;
+            margin: 0 0 12px 0;
+            border-bottom: 1px solid rgba(255,255,255,0.1);
+            padding-bottom: 8px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .black-card p, .black-card span:not(.label-silver) { 
+            color: var(--white) !important; 
+            margin: 6px 0; 
+            font-size: 0.85rem; 
+            opacity: 1; 
+        }
+        
+        .label-silver { color: var(--silver) !important; font-weight: 700; margin-right: 5px; }
+
+        .details-area {
+            display: flex;
+            flex-direction: column;
+            gap: 25px;
+        }
+
+        .scope-box {
+            background: #FFF5F5;
+            border-radius: var(--border-radius);
+            padding: 20px;
+            border: 1px solid rgba(204,0,0,0.1);
+        }
+        .scope-box h3 { color: var(--primary); margin: 0 0 10px 0; font-size: 0.9rem; text-transform: uppercase; font-weight: 800; }
+        .scope-text { font-size: 0.95rem; line-height: 1.5; color: var(--text-main); }
+
+        table { width: 100%; border-collapse: collapse; margin-top: 5px; }
+        th {
+            text-align: left; padding: 12px; font-size: 0.7rem; text-transform: uppercase;
+            color: var(--text-muted); border-bottom: 2px solid var(--secondary);
+            letter-spacing: 1px; font-weight: 800;
+        }
+        .row-item td { padding: 15px 12px; border-bottom: 1px solid var(--bg-body); font-size: 0.95rem; }
+        .col-qty { font-weight: 800; color: var(--primary); text-align: center; }
+        .col-val { text-align: right; }
+        .col-total { text-align: right; font-weight: 800; color: var(--secondary); }
+
+        .btn-add {
+            margin-top: 15px; padding: 12px; border: 1px dashed var(--primary); background: none;
+            color: var(--primary); border-radius: 6px; cursor: pointer; font-size: 0.75rem; font-weight: 800;
+            width: 100%; transition: 0.2s; text-transform: uppercase; letter-spacing: 1px;
+        }
+        .btn-add:hover { background: #FFF5F5; }
+
+        .footer-grid {
+            display: grid;
+            grid-template-columns: 1fr 380px;
+            gap: 40px;
+            margin-top: auto;
+            padding-top: 20px;
+            border-top: 2px solid var(--bg-body);
+        }
+
+        .conditions-box { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
+        .cond-item h4 { color: var(--primary); font-size: 0.7rem; text-transform: uppercase; margin: 0 0 5px 0; font-weight: 800; }
+        .cond-item p { margin: 0; font-size: 0.85rem; font-weight: 600; color: var(--text-main); }
+
+        .total-box {
+            background: var(--secondary) !important;
+            color: var(--silver) !important;
+            padding: 25px;
+            border-radius: var(--border-radius);
+            box-shadow: 0 10px 20px rgba(0,0,0,0.3);
+        }
+        .total-row { display: flex; justify-content: space-between; font-size: 0.9rem; margin-bottom: 8px; color: var(--silver) !important; }
+        
+        .grand-total-row, .grand-total-row span, #total-val {
+            display: flex; 
+            justify-content: space-between; 
+            margin-top: 5px; 
+            color: var(--silver) !important; 
+            font-size: 1.4rem; 
+            font-weight: 900;
+            text-transform: uppercase;
+        }
+        
+        .grand-total-divider {
+            border-top: 1px solid rgba(255,255,255,0.1);
+            margin-top: 10px;
+            padding-top: 10px;
+        }
+
+        .btn-print {
+            position: fixed; bottom: 30px; right: 30px; background: var(--primary);
+            color: white; border: none; padding: 16px 35px; border-radius: 50px;
+            font-weight: 800; cursor: pointer; box-shadow: 0 10px 25px rgba(204,0,0,0.3);
+            z-index: 1000; font-size: 0.9rem; transition: 0.3s;
+        }
+        .btn-print:hover { transform: translateY(-3px); background: var(--secondary); }
+
+        [contenteditable="true"]:focus { outline: none; background: rgba(255,255,255,0.05); border-radius: 4px; }
+        .btn-remove { color: var(--primary); cursor: pointer; background: none; border: none; font-weight: 900; font-size: 1.1rem; opacity: 0.3; }
+        .row-item:hover .btn-remove { opacity: 1; }
+    </style>
+</head>
+<body>
+
+    <button class="no-print btn-print" onclick="window.print()">🖨️ EMITIR PROPOSTA COMERCIAL</button>
+
+    <div class="page">
+        <header>
+            <div class="brand-box">
+                <div class="brand" contenteditable="true">FACILITIES<span> & LICENÇAS</span></div>
+                <div class="tagline" contenteditable="true">🚀 Kelly Lopes | Especialista Técnica</div>
+            </div>
+            <div class="doc-meta">
+                <div class="doc-label">Proposta Executiva Premium</div>
+                <div style="font-size: 0.8rem; margin-top: 8px; color: var(--text-muted); font-weight: 600;">REF: <span contenteditable="true">#2026-KLL-P01</span></div>
+            </div>
+        </header>
+
+        <div class="main-content">
+            <div class="sidebar">
+                <div class="black-card">
+                    <h3>👤 Solicitante</h3>
+                    <p><span class="label-silver">Nome:</span> <span contenteditable="true">Eng. Anderson Monteiro</span></p>
+                    <p><span class="label-silver">Empresa:</span> <span contenteditable="true">Açotubo</span></p>
+                    <p><span class="label-silver">📅 Data:</span> <span id="current-date">--/--/----</span></p>
+                </div>
+                <div class="black-card">
+                    <h3>🛠️ Especialista</h3>
+                    <p><span class="label-silver">Nome:</span> <span contenteditable="true">Kelly Lopes</span></p>
+                    <p><span class="label-silver">Cargo:</span> <span contenteditable="true">Especialista Facilities</span></p>
+                    <p><span class="label-silver">Contato:</span> <span contenteditable="true">kelly.lopes@exemplo.com</span></p>
+                </div>
+                <div class="black-card">
+                    <h3>💡 Missão</h3>
+                    <p style="font-style: italic; line-height: 1.5;">"Garantir conformidade técnica e agilidade operacional para que seu foco permaneça no crescimento do negócio."</p>
+                </div>
+            </div>
+
+            <div class="details-area">
+                <div class="scope-box">
+                    <h3>🎯 Escopo e Objetivos Técnicos</h3>
+                    <div class="scope-text" contenteditable="true">
+                        Consultoria especializada para providência de alvarás, desembaraço técnico em licenças e regularização integral das operações perante os órgãos competentes.
+                    </div>
+                </div>
+
+                <div class="table-wrap">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th style="width: 60px; text-align: center;">Qtd</th>
+                                <th>Descrição do Serviço Especializado</th>
+                                <th style="width: 140px; text-align: right;">Unitário</th>
+                                <th style="width: 140px; text-align: right;">Total</th>
+                                <th class="no-print" style="width: 40px;"></th>
+                            </tr>
+                        </thead>
+                        <tbody id="items-body">
+                            <tr class="row-item">
+                                <td class="col-qty" contenteditable="true" onblur="calc()">1</td>
+                                <td contenteditable="true" style="font-weight: 600;">Desembaraço Técnico e Consultoria em Licenças</td>
+                                <td class="col-val" contenteditable="true" onblur="calc()">R$ 500,00</td>
+                                <td class="col-total">R$ 500,00</td>
+                                <td class="no-print" style="text-align: center;"><button class="btn-remove" onclick="removeRow(this)">✕</button></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                    <button class="btn-add no-print" onclick="addRow()">+ ADICIONAR ITEM À PROPOSTA</button>
+                </div>
+            </div>
+        </div>
+
+        <div class="footer-grid">
+            <div class="conditions-box">
+                <div class="cond-item">
+                    <h4>💳 Forma de Pagamento</h4>
+                    <p contenteditable="true">Integral no ato da resolução/solução do problema.</p>
+                </div>
+                <div class="cond-item">
+                    <h4>⚡ Prazo de Entrega</h4>
+                    <p contenteditable="true">Imediato após validação técnica final.</p>
+                </div>
+                <div class="cond-item">
+                    <h4>📝 Validade</h4>
+                    <p contenteditable="true">Proposta válida por 15 dias corridos.</p>
+                </div>
+                <div class="cond-item">
+                    <h4>🚩 Obs</h4>
+                    <p contenteditable="true">Sujeito a análise de documentação prévia.</p>
+                </div>
+            </div>
+
+            <div class="total-box">
+                <div class="total-row">
+                    <span>Subtotal:</span>
+                    <span id="sub-val">R$ 500,00</span>
+                </div>
+                <div class="total-row" id="disc-row" style="display: none;">
+                    <span>Desconto Aplicado (<span contenteditable="true" id="disc-p" onblur="calc()">0</span>%):</span>
+                    <span id="disc-v">R$ 0,00</span>
+                </div>
+                <div class="grand-total-divider"></div>
+                <div class="grand-total-row">
+                    <span>INVESTIMENTO TOTAL</span>
+                    <span id="total-val">R$ 500,00</span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        document.getElementById('current-date').innerText = new Date().toLocaleDateString('pt-BR');
+
+        function addRow() {
+            const tr = document.createElement('tr');
+            tr.className = 'row-item';
+            tr.innerHTML = `
+                <td class="col-qty" contenteditable="true" onblur="calc()">1</td>
+                <td contenteditable="true">Novo item de serviço...</td>
+                <td class="col-val" contenteditable="true" onblur="calc()">R$ 0,00</td>
+                <td class="col-total">R$ 0,00</td>
+                <td class="no-print" style="text-align: center;"><button class="btn-remove" onclick="removeRow(this)">✕</button></td>
+            `;
+            document.getElementById('items-body').appendChild(tr);
+            calc();
+        }
+
+        function removeRow(btn) {
+            if(document.querySelectorAll('.row-item').length > 1) {
+                btn.closest('tr').remove();
+                calc();
+            }
+        }
+
+        function p(s) { return parseFloat(s.replace('R$', '').replace(/\./g, '').replace(',', '.').trim()) || 0; }
+        function f(v) { return 'R$ ' + v.toLocaleString('pt-BR', { minimumFractionDigits: 2 }); }
+
+        function calc() {
+            let sub = 0;
+            document.querySelectorAll('.row-item').forEach(r => {
+                const q = parseFloat(r.cells[0].innerText) || 0;
+                const u = p(r.cells[2].innerText);
+                const t = q * u;
+                r.cells[3].innerText = f(t);
+                sub += t;
+            });
+            const dp = parseFloat(document.getElementById('disc-p').innerText) || 0;
+            const dv = sub * (dp / 100);
+            const gt = sub - dv;
+            document.getElementById('sub-val').innerText = f(sub);
+            document.getElementById('disc-v').innerText = '- ' + f(dv);
+            document.getElementById('total-val').innerText = f(gt);
+            document.getElementById('disc-row').style.display = dp > 0 ? 'flex' : 'none';
+        }
+        calc();
+    </script>
+</body>
+</html>
