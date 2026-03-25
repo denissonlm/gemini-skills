@@ -3,55 +3,62 @@ name: gerador-apresentacao
 description: "Gera apresentações HTML premium (16:9) no padrão visual SESMT/Açotubo, incluindo logo oficial, fontes Plus Jakarta Sans e componentes interativos (Gantt, Status Cards)."
 ---
 
-# Skill: Gerador de Apresentações Premium (SESMT/Açotubo)
+# Skill: Gerador de Apresentações Premium v2 (SESMT/Açotubo)
 
-Esta skill automatiza a criação de apresentações interativas de alto impacto, garantindo consistência visual com a identidade do Grupo Açotubo e SESMT Corporativo.
+Esta skill automatiza a criação de apresentações interativas de alto impacto baseadas no **Padrão Interativo 2026**, garantindo consistência visual absoluta com a identidade do Grupo Açotubo e SESMT Corporativo.
 
-## Identidade Visual Obrigatória
-- **Logo Oficial:** `C:\Users\denisson.monteiro\OneDrive - Grupo Açotubo\0 SESMT\Organizar\SESMT_v1\SESMT\Ocorrência Indesejada\Gestão 2026\01 Fluxo, indicadores e templates\Logo.png`
-- **Fontes:** Plus Jakarta Sans (Google Fonts).
-- **Cores:**
-  - `Primary Red:` #E30613
-  - `Dark Navy:` #0f172a
-  - `Success Green:` #22c55e
-  - `Alert Red:` #e11d48
-- **Geometria:**
-  - **Apresentação (16:9):** 338.67mm x 190.5mm.
-  - **Placas/Avisos (A4 Paisagem):** Container 280mm x 195mm centralizado em body 297mm x 210mm.
-  - **Placas/Avisos (A4 Retrato):** Container 195mm x 280mm centralizado em body 210mm x 297mm.
+## 🛡️ Regras de Hiper Blindagem (Inalteráveis)
+1. **Reset Universal & Geometria:** Todo HTML deve iniciar com reset de margens/padding e `box-sizing: border-box`. O container principal (`slideshow`) deve ter largura máxima de `860px` e altura mínima de `540px` para garantir visualização perfeita em telas 16:9 e tablets.
+2. **Sistema de Cores (Paleta SESMT):**
+   - `Primary Red:` #c0392b (Uso em botões, destaques e ícones)
+   - `Secondary Red:` #E30613 (Uso em logos e bordas de destaque)
+   - `Light Red (Background):` #f8e9e8
+   - `Deep Navy / Dark:` #111111 (Capa e rodapés escuros)
+   - `Neutral Gray:` #555555
+   - `Gray Light:` #f2f2f2 (Cards de fundo)
+3. **Tipografia:** Uso obrigatório da fonte **'Inter'** ou **'Plus Jakarta Sans'** (Google Fonts) com pesos 400, 600, 800 e 900.
+4. **Tarja de Privacidade (LGPD):** Dados sensíveis (Nomes, REs, Fotos de rosto) DEVEM ser protegidos por uma tarja visual (`background: #111; color: #111; border-radius: 3px;`).
 
-## Componentes Disponíveis (Templates HTML/CSS)
+## 🏗️ Estrutura Obrigatória de Slides
 
-### 1. Slide de Capa / Cabeçalho de Placa
-- Título principal com borda lateral esquerda (15px solid #E30613).
-- Subtítulo com recuo de 35px.
-- Elementos de fundo: `grid-pattern` (malha) e `blob-red` (gradiente suave).
-- Watermark de escudo (`fas fa-shield-alt`) ao fundo.
+### 1. Slide de Capa (Hero Slide)
+- **Badge SESMT:** Pílula superior vermelha com texto em branco "SESMT · GRUPO AÇOTUBO".
+- **Título:** Fonte 900, `clamp(1.6rem, 4vw, 2.6rem)`, com palavras-chave em vermelho.
+- **SVG Animado:** Incluir um ícone SVG flutuante central (`animation: floatY 3.5s ease-in-out infinite`).
+- **Meta Chips:** Grid inferior com ícones sutis para Número do RAT, Data e Unidade.
 
-### 2. Slide de Objetivos / Cards de Aviso
-- Grid de colunas com cards brancos/cinza claro.
-- Ícones FontAwesome em vermelho.
-- Numeração de passos (`card-step`) em fonte gigante com opacidade 0.05 ao fundo do card.
+### 2. Slide de Comunicado (Padrão RAT)
+- **Header:** Gradiente marinho escuro (#2d3748 a #1a202c) com borda inferior vermelha (4px).
+- **InfoBar:** Faixa cinza clara com borda lateral esquerda vermelha para Data e Expedição.
+- **Grid de Dados:** 4 colunas para Vítima, Cargo, RE, Unidade, Local, Tempo e Tipo.
+- **Categorização de Risco:** 3 boxes (Leve, Moderado, Grave) com cores semânticas e o ícone `✓` no box ativo (animado com `pulse`).
 
-### 3. Slide de Cronograma (Gantt Premium) / Escalas de Horário
-- Tabela temporal interativa ou tabelas de horários com listras sutis.
-- Fins de semana ou períodos destacados com `period-tag`.
+### 3. Slides de Conscientização (Content Cards)
+- **Header Lateral:** Ícone em card 64x64px com fundo `red-light`.
+- **Card List:** Lista de itens em fundo `gray-light` com borda lateral esquerda vermelha.
+- **Alert Box:** Box de destaque com borda vermelha suave e ícone de alerta para conclusões críticas.
 
-### 4. Slide de Status / Alertas Críticos
-- Utilizar cores semânticas (Verde para Confirmado, Vermelho para Suspenso/Alerta).
-- Bordas superiores espessas (12px) nos cards de status.
+### 4. Slide de Encerramento
+- **Background Dark:** Fundo #111 com texto em branco.
+- **Pills de Resumo:** Grid de pílulas cinzas com os 3 ou 4 aprendizados principais do treinamento.
 
-## Diretrizes de Geração e Blindagem de Layout
-1. **Reset Universal (Obrigatório):** Sempre incluir `* { box-sizing: border-box; margin: 0; padding: 0; }` para evitar que paddings quebrem o layout.
-2. **Harmonização de Containers:**
-   - O container principal deve ter dimensões fixas em `mm` ligeiramente menores que a página para garantir margens de impressão.
-   - Usar `display: flex; flex-direction: column;` no container principal.
-   - Usar `flex-grow: 1; min-height: 0;` em grids internos (`content-grid`) para que eles ocupem o espaço restante sem estourar o container pai.
-3. **Navegação (Slides):** Sempre incluir o script de controle por teclado (Setas/Espaço) e botões flutuantes.
-4. **Rodapé:** Manter "GRUPO AÇOTUBO | SEGURANÇA E SAÚDE OCUPACIONAL" e contador de slides (se aplicável).
-5. **Destino:** Salvar os arquivos por padrão em `C:\Users\denisson.monteiro\Downloads`.
-6. **Interatividade:** Transições suaves (0.8s cubic-bezier) e hover effects sutis nos cards.
+## 🎞️ Sistema de Animações (CSS Base)
+O agente DEVE incluir obrigatoriamente as seguintes animações para cada troca de slide:
+- `@keyframes fadeUp`: Opacidade 0 a 1 com deslocamento de 22px para cima.
+- `@keyframes scaleIn`: Zoom suave de 0.88 para 1.
+- `anim-up-[1-6]`: Delays escalonados (0.1s a 0.85s) para entrada sequencial de elementos.
 
-## Integração de Fluxo (Multiskill)
-- **Lista de Presença (DSS):** Após gerar qualquer apresentação de segurança, treinamento ou alerta crítico, o agente DEVE invocar automaticamente a skill `dss-acotubo` para gerar a **Lista de Presença** correspondente, utilizando o título da apresentação como tema principal.
-- **Consistência:** Garanta que a data e o responsável (SESMT Corporativo) sejam consistentes entre a apresentação e a lista de presença.
+## ⌨️ Interatividade e Navegação
+- **Progress Bar:** Barra superior (`#progressFill`) que atualiza dinamicamente conforme o slide.
+- **Botões de Navegação:** Botões flutuantes fixos no rodapé (Anterior/Próximo) com estados `:hover` e `:disabled`.
+- **Key Binding:** Escuta de eventos `ArrowRight`, `ArrowLeft`, `ArrowUp` e `ArrowDown`.
+
+## 📁 Gestão de Arquivos e Recursos
+- **Logo:** `C:\Users\denisson.monteiro\OneDrive - Grupo Açotubo\0 SESMT\Organizar\SESMT_v1\SESMT\Ocorrência Indesejada\Gestão 2026\01 Fluxo, indicadores e templates\Logo.png`
+- **Destino Padrão:** Salvar sempre em `C:\Users\denisson.monteiro\Downloads`.
+- **Multiskill:** Após gerar, invocar `dss-acotubo` para a Lista de Presença correspondente.
+
+## 🚫 Blindagem de Formato
+- **NÃO** utilizar Markdown nos textos de conteúdo (usar `<strong>`, `<span>`, `<p>`).
+- **NÃO** alterar a paleta de cores para tons que não sejam o Vermelho Açotubo ou Marinho Escuro.
+- **NÃO** remover o rodapé de créditos do SESMT.
