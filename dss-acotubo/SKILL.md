@@ -19,14 +19,16 @@ Skill especializada para geração de Diálogos de Segurança (DSS) e Listas de 
    - **Página 2 (Verso)**: Rodapé de Continuação + 32 linhas de assinatura (0.8cm cada).
 6. **Campos Editáveis Reais**: Os campos "Divisão", "Responsável Local" e "Data / Horário" DEVEM obrigatoriamente possuir o atributo `contenteditable="true"`. O campo "Responsável SESMT" deve ser fixo como "Denisson Monteiro".
 7. **Estilo Visual "Açotubo Modern"**: 
-   - Logo direto do OneDrive: `C:\Users\denisson.monteiro\OneDrive - Grupo Açotubo\0 SESMT\Organizar\SESMT_v1\SESMT\Ocorrência Indesejada\Gestão 2026\01 Fluxo, indicadores e templates\Logo.png`.
+   - Logo: DEVE ser embutido como **Base64** no HTML para garantir compatibilidade com todos os navegadores (Safari/Chrome).
+   - Fonte do Logo: `/Users/denisson/Library/CloudStorage/OneDrive-GrupoAçotubo/0 SESMT/Organizar/SESMT_v1/SESMT/Ocorrência Indesejada/Gestão 2026/01 Fluxo, indicadores e templates/Logo.png`.
    - Vermelho Açotubo (`#cc0000`) nas bordas e faixas de destaque.
    - Fonte 'Inter' com pesos 700 e 900.
 
 ## Workflow
 1. Analisar material base.
 2. Extrair: Tema (curto), Resumo Educativo (conciso) e 3 Riscos Críticos.
-3. Gerar HTML em `Downloads\Lista_Presenca_DSS.html` usando o template blindado.
-4. **VERIFICAÇÃO DE FUNCIONALIDADE**: O agente DEVE garantir que os campos de cabeçalho permitam edição manual via browser (`contenteditable="true"`) antes de salvar.
-5. **VERIFICAÇÃO DE ESTRUTURA**: O agente DEVE conferir se o código HTML possui EXATAMENTE DUAS tags `<div class="page">` antes de salvar.
-6. Aplicar rigorosamente os limites de caracteres no prompt de geração.
+3. **Processamento de Logo**: Converter o arquivo de logo em `/Users/denisson/Library/CloudStorage/OneDrive-GrupoAçotubo/0 SESMT/Organizar/SESMT_v1/SESMT/Ocorrência Indesejada/Gestão 2026/01 Fluxo, indicadores e templates/Logo.png` para uma string Base64.
+4. Gerar HTML em `Downloads\Lista_Presenca_DSS.html` usando o template blindado, inserindo a string Base64 no atributo `src` da tag de imagem.
+5. **VERIFICAÇÃO DE FUNCIONALIDADE**: O agente DEVE garantir que os campos de cabeçalho permitam edição manual via browser (`contenteditable="true"`) antes de salvar.
+6. **VERIFICAÇÃO DE ESTRUTURA**: O agente DEVE conferir se o código HTML possui EXATAMENTE DUAS tags `<div class="page">` antes de salvar.
+7. Aplicar rigorosamente os limites de caracteres no prompt de geração.
