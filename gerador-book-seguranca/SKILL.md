@@ -25,6 +25,15 @@ Sempre que houver novos arquivos de treinamento na pasta raiz de Infográficos, 
 2.  Solicite: "Atualizar os Books de Segurança".
 3.  O agente executará o script `gerar_book.py` e substituirá os arquivos na pasta oficial.
 
+## 📂 Regras de Categorização
+
+Para manter a organização lógica do Book, os arquivos devem ser classificados seguindo estas diretrizes:
+
+1.  **EPIS:** Itens relacionados a equipamentos (botina, capacete, luvas, óculos, etc).
+2.  **AÇÕES COMPORTAMENTAIS E CULTURA:** Devem incluir campanhas de conscientização (Maio Amarelo, Abril Verde, Janeiro Branco), regras de convivência (celular na fábrica), direitos fundamentais (Direito de Recusa), compliance (adornos, medidas disciplinares) e treinamentos comportamentais (falar em público, piloto automático). **IMPORTANTE:** Campanhas mensais devem aparecer em **ordem cronológica** (Janeiro a Dezembro) no início da categoria, seguidas pelos demais temas.
+3.  **OPERAÇÃO E LOGÍSTICA:** Temas técnicos de movimentação (ponte rolante, empilhadeira, carga segura, içamento).
+4.  **PROCEDIMENTOS E INTEGRAÇÃO:** Documentos de integração, checklists, APR e procedimentos específicos de ferramentas (escadas, estiletes).
+
 ## 📋 Integrantes do SESMT (Fixos no Encerramento)
 - Denisson Monteiro (Engenheiro)
 - Cleber Edmar (Supervisor)
