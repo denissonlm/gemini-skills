@@ -12,3 +12,4 @@ desktop.ini
 .cache/
 node_modules/
 .gemini/
+gmail-cleaner/token.json
