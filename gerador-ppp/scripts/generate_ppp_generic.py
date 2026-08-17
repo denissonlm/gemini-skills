@@ -7,7 +7,7 @@ from docx.oxml import parse_xml, OxmlElement
 from docx.oxml.ns import nsdecls, qn
 from docx.enum.text import WD_ALIGN_PARAGRAPH
 
-def set_cell_margins(cell, top=72, bottom=72, left=72, right=72):
+def set_cell_margins(cell, top=50, bottom=50, left=72, right=72):
     """Define margens internas da célula em dxa (1/20 de ponto)."""
     tcPr = cell._element.get_or_add_tcPr()
     tcMar = OxmlElement('w:tcMar')
@@ -47,7 +47,6 @@ def build_table_section(doc, t_cols, rows_data, col_width_cm):
     table = doc.add_table(rows=0, cols=36)
     table.alignment = WD_ALIGN_PARAGRAPH.CENTER
     
-    # Configurar larguras exatas para a grade de 36 colunas
     for i, col in enumerate(table.columns):
         col.width = Inches(col_width_cm)
         
@@ -66,7 +65,6 @@ def build_table_section(doc, t_cols, rows_data, col_width_cm):
             cells_to_merge.append((cell, span, text, align, is_bold, size, is_header))
             curr_col += span
             
-        # Formatar células após merge
         for cell, span, text, align, is_bold, size, is_header in cells_to_merge:
             set_cell_margins(cell, top=50, bottom=50, left=72, right=72)
             
@@ -95,13 +93,200 @@ def build_table_section(doc, t_cols, rows_data, col_width_cm):
             
     doc.add_paragraph().paragraph_format.space_after = Pt(2)
 
+def build_registros_ambientais_table(doc, exposicao_riscos, col_width_cm):
+    """Constrói a Tabela 15 (REGISTROS AMBIENTAIS) com mesclagem vertical perfeita nos cabeçalhos."""
+    num_rows = 4 + len(exposicao_riscos) + 2
+    table = doc.add_table(rows=num_rows, cols=36)
+    table.alignment = WD_ALIGN_PARAGRAPH.CENTER
+
+    for col in table.columns:
+        col.width = Inches(col_width_cm)
+
+    # R0: REGISTROS AMBIENTAIS
+    r0_cell = table.rows[0].cells[0]
+    r0_cell.merge(table.rows[0].cells[35])
+    set_cell_margins(r0_cell, top=50, bottom=50, left=72, right=72)
+    set_cell_borders(r0_cell, top="000000", bottom="000000", left="000000", right="000000")
+    set_cell_shading(r0_cell, "F2F2F2")
+    p = r0_cell.paragraphs[0]
+    p.alignment = WD_ALIGN_PARAGRAPH.CENTER
+    r = p.add_run("REGISTROS AMBIENTAIS")
+    r.font.name = "Arial Narrow"
+    r.font.size = Pt(10)
+    r.font.bold = True
+
+    # R1: 15 - EXPOSIÇÃO A FATORES DE RISCOS
+    r1_cell = table.rows[1].cells[0]
+    r1_cell.merge(table.rows[1].cells[35])
+    set_cell_margins(r1_cell, top=50, bottom=50, left=72, right=72)
+    set_cell_borders(r1_cell, top="000000", bottom="000000", left="000000", right="000000")
+    set_cell_shading(r1_cell, "F2F2F2")
+    p = r1_cell.paragraphs[0]
+    p.alignment = WD_ALIGN_PARAGRAPH.CENTER
+    r = p.add_run("15 - EXPOSIÇÃO A FATORES DE RISCOS")
+    r.font.name = "Arial Narrow"
+    r.font.size = Pt(10)
+    r.font.bold = True
+
+    # R2 e R3: Cabeçalhos com Mesclagem Retangular (Vertical + Horizontal)
+    r2 = table.rows[2]
+    r3 = table.rows[3]
+
+    header_spans = [
+        (5, "15.1 - Período"),
+        (2, "15.2 Tipo"),
+        (6, "15.3 - Fator de Risco"),
+        (3, "15.4 - Int./Conc."),
+        (4, "15.5 - Técnica"),
+        (2, "15.6 EPC"),
+        (2, "15.7 EPI"),
+        (2, "15.8 CA")
+    ]
+
+    curr_col = 0
+    for span, text in header_spans:
+        end_col = curr_col + span - 1
+        cell_r2 = r2.cells[curr_col]
+        cell_r3 = r3.cells[curr_col]
+
+        if span > 1:
+            cell_r2.merge(r2.cells[end_col])
+            cell_r3.merge(r3.cells[end_col])
+
+        merged_cell = cell_r2.merge(cell_r3)
+        set_cell_margins(merged_cell, top=50, bottom=50, left=72, right=72)
+        set_cell_borders(merged_cell, top="000000", bottom="000000", left="000000", right="000000")
+        set_cell_shading(merged_cell, "F2F2F2")
+
+        p = merged_cell.paragraphs[0]
+        p.alignment = WD_ALIGN_PARAGRAPH.CENTER
+        p.paragraph_format.space_before = Pt(1)
+        p.paragraph_format.space_after = Pt(1)
+        r = p.add_run(text)
+        r.font.name = "Arial Narrow"
+        r.font.size = Pt(7.5)
+        r.font.bold = True
+
+        curr_col += span
+
+    # 15.9 Requisitos NR-06 / NR-01 na R2 (cols 26 a 35)
+    cell_159_r2 = r2.cells[26]
+    cell_159_r2.merge(r2.cells[35])
+    set_cell_margins(cell_159_r2, top=50, bottom=50, left=72, right=72)
+    set_cell_borders(cell_159_r2, top="000000", bottom="000000", left="000000", right="000000")
+    set_cell_shading(cell_159_r2, "F2F2F2")
+    p = cell_159_r2.paragraphs[0]
+    p.alignment = WD_ALIGN_PARAGRAPH.CENTER
+    p.paragraph_format.space_before = Pt(1)
+    p.paragraph_format.space_after = Pt(1)
+    r = p.add_run("15.9 - Requisitos NR-06 / NR-01 (*)")
+    r.font.name = "Arial Narrow"
+    r.font.size = Pt(7.5)
+    r.font.bold = True
+
+    # Subcabeçalhos do 15.9 na R3 (cols 26 a 35 em pares de 2)
+    sub_159_spans = [
+        (2, "Med. Prot."),
+        (2, "Cond. Func."),
+        (2, "Prazo Val."),
+        (2, "Periodic."),
+        (2, "Higien.")
+    ]
+    curr_col = 26
+    for span, text in sub_159_spans:
+        end_col = curr_col + span - 1
+        cell_r3 = r3.cells[curr_col]
+        if span > 1:
+            cell_r3.merge(r3.cells[end_col])
+        set_cell_margins(cell_r3, top=50, bottom=50, left=72, right=72)
+        set_cell_borders(cell_r3, top="000000", bottom="000000", left="000000", right="000000")
+        set_cell_shading(cell_r3, "F2F2F2")
+        p = cell_r3.paragraphs[0]
+        p.alignment = WD_ALIGN_PARAGRAPH.CENTER
+        p.paragraph_format.space_before = Pt(1)
+        p.paragraph_format.space_after = Pt(1)
+        r = p.add_run(text)
+        r.font.name = "Arial Narrow"
+        r.font.size = Pt(6.5)
+        r.font.bold = True
+        curr_col += span
+
+    # Linhas de Dados (a partir da R4)
+    data_start_row = 4
+    for d_idx, item in enumerate(exposicao_riscos):
+        row = table.rows[data_start_row + d_idx]
+        req = item.get("requisitos", {})
+
+        row_spans = [
+            (5, item.get("periodo", ""), "center"),
+            (2, item.get("tipo", ""), "center"),
+            (6, item.get("fator_risco", ""), "left"),
+            (3, item.get("intensidade_concentracao", ""), "center"),
+            (4, item.get("tecnica", ""), "center"),
+            (2, item.get("epc_eficaz", ""), "center"),
+            (2, item.get("epi_eficaz", ""), "center"),
+            (2, item.get("ca", "-"), "center"),
+            (2, req.get("med_prot", "N"), "center"),
+            (2, req.get("cond_func", "N"), "center"),
+            (2, req.get("prazo_val", "N"), "center"),
+            (2, req.get("periodic", "N"), "center"),
+            (2, req.get("higien", "N"), "center")
+        ]
+
+        curr_col = 0
+        for span, text, align in row_spans:
+            end_col = curr_col + span - 1
+            cell = row.cells[curr_col]
+            if span > 1:
+                cell.merge(row.cells[end_col])
+            set_cell_margins(cell, top=50, bottom=50, left=72, right=72)
+            set_cell_borders(cell, top="000000", bottom="000000", left="000000", right="000000")
+            p = cell.paragraphs[0]
+            p.paragraph_format.space_before = Pt(1)
+            p.paragraph_format.space_after = Pt(1)
+            p.paragraph_format.line_spacing = 1.05
+
+            if align == "center":
+                p.alignment = WD_ALIGN_PARAGRAPH.CENTER
+            else:
+                p.alignment = WD_ALIGN_PARAGRAPH.LEFT
+
+            r = p.add_run(text)
+            r.font.name = "Arial Narrow"
+            r.font.size = Pt(8)
+            curr_col += span
+
+    # Linhas de Legenda no final da Tabela
+    leg_row_1 = table.rows[data_start_row + len(exposicao_riscos)]
+    cell_leg1 = leg_row_1.cells[0]
+    cell_leg1.merge(leg_row_1.cells[35])
+    set_cell_margins(cell_leg1, top=50, bottom=50, left=72, right=72)
+    set_cell_borders(cell_leg1, top="000000", bottom="000000", left="000000", right="000000")
+    p1 = cell_leg1.paragraphs[0]
+    p1.alignment = WD_ALIGN_PARAGRAPH.LEFT
+    r1 = p1.add_run("*Legenda do item 15.9: Medida de Proteção: Foi tentada a implementação de medidas de proteção coletiva, de caráter administrativo ou de organização do trabalho, optando-se pelo Equipamento de Proteção Individual - EPI por inviabilidade técnica, insuficiência ou interinidade, ou ainda em caráter complementar ou emergencial?")
+    r1.font.name = "Arial Narrow"
+    r1.font.size = Pt(7)
+
+    leg_row_2 = table.rows[data_start_row + len(exposicao_riscos) + 1]
+    cell_leg2 = leg_row_2.cells[0]
+    cell_leg2.merge(leg_row_2.cells[35])
+    set_cell_margins(cell_leg2, top=50, bottom=50, left=72, right=72)
+    set_cell_borders(cell_leg2, top="000000", bottom="000000", left="000000", right="000000")
+    p2 = cell_leg2.paragraphs[0]
+    p2.alignment = WD_ALIGN_PARAGRAPH.LEFT
+    r2 = p2.add_run("Condição de Funcionamento do EPI: Foram observadas as condições de funcionamento e do uso ininterrupto do EPI ao longo do tempo, conforme especificação técnica do fabricante, ajustada às condições? Prazo de Validade do EPI: Foi observado o prazo de validade, conforme Certificado de Aprovação - CA do MTP? Periocidade da Troca do EPI: Foi observada a periodicidade de troca definida pelos programas ambientais, comprovada mediante recibo assinado pelo usuário em época própria? Higienização do EPI: Foi observada a higienização?")
+    r2.font.name = "Arial Narrow"
+    r2.font.size = Pt(7)
+
+    doc.add_paragraph().paragraph_format.space_after = Pt(2)
+
 def generate_document_from_json(json_path, output_path):
     with open(json_path, 'r', encoding='utf-8') as f:
         data = json.load(f)
         
     doc = Document()
     
-    # 1. Configuração de Margens (2.0 cm superior/inferior, 1.0 cm laterais)
     sections = doc.sections
     for section in sections:
         section.top_margin = Inches(0.7874)     # 2.0 cm
@@ -111,11 +296,9 @@ def generate_document_from_json(json_path, output_path):
         section.page_width = Inches(8.2677)     # A4
         section.page_height = Inches(11.6929)   # A4
         
-        # 1.1 Configurar o cabeçalho da página (imagem e tabela de cabeçalho do template)
         header = section.header
         header.is_linked_to_previous = False
         
-        # Limpar parágrafos padrões do cabeçalho
         for p in list(header.paragraphs):
             p_element = p._p
             p_element.getparent().remove(p_element)
@@ -170,7 +353,6 @@ def generate_document_from_json(json_path, output_path):
         run_txt.font.size = Pt(7.5)
         run_txt.font.bold = True
         
-        # 1.2 Configurar o rodapé da página (numeração dinâmica)
         footer = section.footer
         p_footer = footer.paragraphs[0]
         p_footer.alignment = WD_ALIGN_PARAGRAPH.RIGHT
@@ -186,18 +368,14 @@ def generate_document_from_json(json_path, output_path):
         fldSimple = parse_xml(r'<w:fldSimple %s w:instr="PAGE"/>' % nsdecls('w'))
         p_footer._p.append(fldSimple)
         
-    # Idioma padrão pt-BR
     doc.styles['Normal'].font.name = 'Segoe UI'
     doc.styles['Normal'].font.size = Pt(9)
     doc.styles['Normal'].element.xpath('w:rPr')[0].append(parse_xml('<w:lang %s w:val="pt-BR"/>' % nsdecls('w')))
     
-    # Grade de 36 colunas, largura total 19.0 cm (col_width = 19.0 / 36.0 = 0.5278 cm)
-    col_width_cm = 19.0 / 36.0 / 2.54 # dxa/Inches
+    col_width_cm = 19.0 / 36.0 / 2.54
     t_cols = [col_width_cm * (i+1) for i in range(36)]
     
-    # ----------------------------------------------------
-    # TABELA 1: SEÇÃO I - DADOS ADMINISTRATIVOS (36 colunas, largura total 19.0 cm)
-    # ----------------------------------------------------
+    # TABELA 1: DADOS ADMINISTRATIVOS
     dp = data.get("dados_pessoais", {})
     t2_rows = [
         [(36, "SEÇÃO I - DADOS ADMINISTRATIVOS", "center", True, 10, True)],
@@ -215,9 +393,7 @@ def generate_document_from_json(json_path, output_path):
     ]
     build_table_section(doc, t_cols, t2_rows, col_width_cm)
     
-    # ----------------------------------------------------
-    # TABELA 3: LOTAÇÃO E ATRIBUIÇÃO (campos 13 e 14)
-    # ----------------------------------------------------
+    # TABELA 2: LOTAÇÃO E ATRIBUIÇÃO (campo 13)
     t3_rows = [
         [(36, "13. LOTAÇÃO E ATRIBUIÇÃO", "center", True, 10, True)],
         [(5, "13.1 Período", "center", True, 8, False), 
@@ -228,7 +404,6 @@ def generate_document_from_json(json_path, output_path):
          (3, "13.6 CBO", "center", True, 8, False), 
          (2, "13.7 GFIP", "center", True, 8, False)]
     ]
-    
     for item in data.get("lotacao", []):
         t3_rows.append([
             (5, item.get("periodo", ""), "center", False, 8, False),
@@ -241,15 +416,12 @@ def generate_document_from_json(json_path, output_path):
         ])
     build_table_section(doc, t_cols, t3_rows, col_width_cm)
     
-    # ----------------------------------------------------
-    # TABELA 4: DESCRIÇÃO DAS ATIVIDADES (campo 14)
-    # ----------------------------------------------------
+    # TABELA 3: DESCRIÇÃO DAS ATIVIDADES (campo 14)
     t4_rows = [
         [(36, "14. DESCRIÇÃO DAS ATIVIDADES", "center", True, 10, True)],
         [(6, "14.1 - Período", "center", True, 8, False), 
          (30, "14.2 - Descrição Detalhada das Atividades", "center", True, 8, False)]
     ]
-    
     for item in data.get("atividades", []):
         t4_rows.append([
             (6, item.get("periodo", ""), "center", False, 8, False),
@@ -257,65 +429,10 @@ def generate_document_from_json(json_path, output_path):
         ])
     build_table_section(doc, t_cols, t4_rows, col_width_cm)
     
-    # ----------------------------------------------------
-    # TABELA 5: EXPOSIÇÃO A FATORES DE RISCOS (campo 15)
-    # ----------------------------------------------------
-    t5_rows = [
-        [(36, "REGISTROS AMBIENTAIS", "center", True, 10, True)],
-        [(36, "15 - EXPOSIÇÃO A FATORES DE RISCOS", "center", True, 10, True)],
-        [(5, "15.1 - Período", "center", True, 7.5, False), 
-         (2, "15.2 Tipo", "center", True, 7.5, False), 
-         (6, "15.3 - Fator de Risco", "center", True, 7.5, False), 
-         (3, "15.4 - Int./Conc.", "center", True, 7.5, False), 
-         (4, "15.5 - Técnica", "center", True, 7.5, False), 
-         (2, "15.6 EPC", "center", True, 7.5, False), 
-         (2, "15.7 EPI", "center", True, 7.5, False), 
-         (2, "15.8 CA", "center", True, 7.5, False), 
-         (10, "15.9 - Requisitos NR-06 / NR-01 (*)", "center", True, 7.5, False)],
-        [(5, "", "center", True, 8, False), 
-         (2, "", "center", True, 8, False), 
-         (6, "", "center", True, 8, False), 
-         (3, "", "center", True, 8, False), 
-         (4, "", "center", True, 8, False), 
-         (2, "", "center", True, 8, False), 
-         (2, "", "center", True, 8, False), 
-         (2, "", "center", True, 8, False), 
-         (2, "Med. Prot.", "center", True, 6.5, False), 
-         (2, "Cond. Func.", "center", True, 6.5, False), 
-         (2, "Prazo Val.", "center", True, 6.5, False), 
-         (2, "Periodic.", "center", True, 6.5, False), 
-         (2, "Higien.", "center", True, 6.5, False)]
-    ]
+    # TABELA 4: REGISTROS AMBIENTAIS (campo 15) - CONSTRUÇÃO DEDICADA COM VERTICAL MERGE
+    build_registros_ambientais_table(doc, data.get("exposicao_riscos", []), col_width_cm)
     
-    for item in data.get("exposicao_riscos", []):
-        req = item.get("requisitos", {})
-        t5_rows.append([
-            (5, item.get("periodo", ""), "center", False, 8, False),
-            (2, item.get("tipo", ""), "center", False, 8, False),
-            (6, item.get("fator_risco", ""), "left", False, 8, False),
-            (2, item.get("intensidade_concentracao", ""), "center", False, 8, False),
-            (4, item.get("tecnica", ""), "center", False, 8, False),
-            (2, item.get("epc_eficaz", ""), "center", False, 8, False),
-            (2, item.get("epi_eficaz", ""), "center", False, 8, False),
-            (2, item.get("ca", ""), "center", False, 8, False),
-            (2, req.get("med_prot", "N"), "center", False, 8, False),
-            (2, req.get("cond_func", "N"), "center", False, 8, False),
-            (2, req.get("prazo_val", "N"), "center", False, 8, False),
-            (2, req.get("periodic", "N"), "center", False, 8, False),
-            (2, req.get("higien", "N"), "center", False, 8, False)
-        ])
-        
-    t5_rows.append([
-        (36, "*Legenda do item 15.9: Medida de Proteção: Foi tentada a implementação de medidas de proteção coletiva, de caráter administrativo ou de organização do trabalho, optando-se pelo Equipamento de Proteção Individual - EPI por inviabilidade técnica, insuficiência ou interinidade, ou ainda em caráter complementar ou emergencial?", "left", False, 7, False)
-    ])
-    t5_rows.append([
-        (36, "Condição de Funcionamento do EPI: Foram observadas as condições de funcionamento e do uso ininterrupto do EPI ao longo do tempo, conforme especificação técnica do fabricante, ajustada às condições? Prazo de Validade do EPI: Foi observado o prazo de validade, conforme Certificado de Aprovação - CA do MTP? Periocidade da Troca do EPI: Foi observada a periodicidade de troca definida pelos programas ambientais, comprovada mediante recibo assinado pelo usuário em época própria? Higienização do EPI: Foi observada a higienização?", "left", False, 7, False)
-    ])
-    build_table_section(doc, t_cols, t5_rows, col_width_cm)
-    
-    # ----------------------------------------------------
     # TABELA 5: RESPONSÁVEL PELOS REGISTROS AMBIENTAIS (campo 16)
-    # ----------------------------------------------------
     t6_rows = [
         [(36, "16. RESPONSÁVEL PELOS REGISTROS AMBIENTAIS", "center", True, 10, True)],
         [(7, "16.1 - Período", "center", True, 8, False), 
@@ -323,22 +440,18 @@ def generate_document_from_json(json_path, output_path):
          (9, "16.3 - Registro Conselho de Classe", "center", True, 8, False), 
          (11, "16.4 - Nome do profissional legalmente habilitado", "center", True, 8, False)]
     ]
-    
     for item in data.get("responsaveis_ambientais", []):
         t6_rows.append([
             (7, item.get("periodo", ""), "center", False, 8, False),
-            (9, item.get("nit", "Não Encontrado"), "center", False, 8, False), # Pode conter CPF ou NIT conforme o JSON
+            (9, item.get("nit", "Não Encontrado"), "center", False, 8, False),
             (9, item.get("registro_conselho", ""), "center", False, 8, False),
             (11, item.get("nome", ""), "left", False, 8, False)
         ])
     build_table_section(doc, t_cols, t6_rows, col_width_cm)
     
-    # ----------------------------------------------------
-    # TABELA 6: RESPONSÁVEIS PELAS INFORMAÇÕES (Assinaturas e Declaração)
-    # ----------------------------------------------------
+    # TABELA 6: RESPONSÁVEIS PELAS INFORMAÇÕES
     ri = data.get("responsaveis_informacoes", {})
     rep = ri.get("representante_legal", {})
-    
     decl_text = (
         "Declaramos, para todos os fins de direito, que as informações prestadas neste documento "
         "são verídicas e foram transcritas fielmente dos registros administrativos, das demonstrações "
@@ -349,7 +462,6 @@ def generate_document_from_json(json_path, output_path):
         "práticas discriminatórias decorrentes de sua exigibilidade por outrem, bem como de sua divulgação "
         "para terceiros, ressalvado quando exigida pelos órgãos públicos competentes."
     )
-    
     t8_rows = [
         [(36, "RESPONSÁVEIS PELAS INFORMAÇÕES", "center", True, 10, True)],
         [(36, decl_text, "justify", False, 7.5, False)],
@@ -367,20 +479,67 @@ def generate_document_from_json(json_path, output_path):
     ]
     build_table_section(doc, t_cols, t8_rows, col_width_cm)
     
-    # ----------------------------------------------------
-    # TABELA 7: OBSERVAÇÕES
-    # ----------------------------------------------------
-    obs_lines = data.get("observacoes", [])
-    obs_text = "\n\n".join(obs_lines)
-    
-    t9_rows = [
-        [(36, "OBSERVAÇÕES", "center", True, 10, True)],
-        [(36, obs_text, "justify", False, 8.5, False)]
-    ]
-    build_table_section(doc, t_cols, t9_rows, col_width_cm)
+    # TABELA 7: OBSERVAÇÕES (Formatada como parágrafos individuais justificados como no modelo de referência)
+    table_obs = doc.add_table(rows=2, cols=36)
+    table_obs.alignment = WD_ALIGN_PARAGRAPH.CENTER
+    for col in table_obs.columns:
+        col.width = Inches(col_width_cm)
 
+    # R0: OBSERVAÇÕES
+    r0_obs = table_obs.rows[0].cells[0]
+    r0_obs.merge(table_obs.rows[0].cells[35])
+    set_cell_margins(r0_obs, top=50, bottom=50, left=72, right=72)
+    set_cell_borders(r0_obs, top="000000", bottom="000000", left="000000", right="000000")
+    set_cell_shading(r0_obs, "F2F2F2")
+    p_hdr = r0_obs.paragraphs[0]
+    p_hdr.alignment = WD_ALIGN_PARAGRAPH.CENTER
+    r_hdr = p_hdr.add_run("OBSERVAÇÕES")
+    r_hdr.font.name = "Arial Narrow"
+    r_hdr.font.size = Pt(10)
+    r_hdr.font.bold = True
+
+    # R1: Conteúdo de Observações
+    r1_obs = table_obs.rows[1].cells[0]
+    r1_obs.merge(table_obs.rows[1].cells[35])
+    set_cell_margins(r1_obs, top=60, bottom=60, left=100, right=100)
+    set_cell_borders(r1_obs, top="000000", bottom="000000", left="000000", right="000000")
+
+    obs_list = data.get("observacoes", [])
+    # Limpar parágrafo default
+    p_first = r1_obs.paragraphs[0]
     
-    # Criar pasta de saída se não existir
+    for idx, item in enumerate(obs_list):
+        if idx == 0:
+            p = p_first
+        else:
+            p = r1_obs.add_paragraph()
+
+        p.paragraph_format.line_spacing = 1.05
+        p.paragraph_format.space_before = Pt(2)
+        p.paragraph_format.space_after = Pt(4)
+        p.alignment = WD_ALIGN_PARAGRAPH.JUSTIFY
+
+        # Verificar se tem título no item (ex: '•  Agente Físico (Ruído): ...')
+        if ":" in item and (item.startswith("•") or item[0].isdigit()):
+            parts = item.split(":", 1)
+            title_part = parts[0] + ":"
+            body_part = parts[1]
+
+            r_t = p.add_run(title_part)
+            r_t.font.name = "Arial Narrow"
+            r_t.font.size = Pt(8.5)
+            r_t.font.bold = True
+
+            r_b = p.add_run(body_part)
+            r_b.font.name = "Arial Narrow"
+            r_b.font.size = Pt(8.5)
+        else:
+            r_b = p.add_run(item)
+            r_b.font.name = "Arial Narrow"
+            r_b.font.size = Pt(8.5)
+
+    doc.add_paragraph().paragraph_format.space_after = Pt(2)
+
     out_dir = os.path.dirname(output_path)
     if out_dir and not os.path.exists(out_dir):
         os.makedirs(out_dir)
