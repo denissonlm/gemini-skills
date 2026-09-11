@@ -1,0 +1,4 @@
+interface:
+  display_name: "Investigações de Acidentes SESMT"
+  short_description: "Cria comunicado e investigação sem inventar dados"
+  default_prompt: "Use $processar-investigacao-acidente para analisar esta pasta, separar acidente do trabalho de trajeto, perguntar tudo o que estiver ausente e gerar comunicado, DOCX e PDF somente após minha validação."

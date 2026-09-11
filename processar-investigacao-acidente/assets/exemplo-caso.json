@@ -1,0 +1,103 @@
+{
+  "classification": "trabalho",
+  "document": {
+    "publication_date": "DD/MM/AAAA",
+    "publication_datetime": "DD/MM/AAAA (dia), HH:MM"
+  },
+  "victim": {
+    "name": "PREENCHER",
+    "role": "PREENCHER",
+    "re": "PREENCHER",
+    "unit": "PREENCHER",
+    "absence": "PREENCHER",
+    "contact": "PREENCHER",
+    "witnesses": "PREENCHER",
+    "supervisor": "PREENCHER",
+    "experience": "PREENCHER",
+    "recurrence": "PREENCHER"
+  },
+  "incident": {
+    "datetime": "DD/MM/AAAA (dia), HH:MM",
+    "date": "DD/MM/AAAA",
+    "location": "PREENCHER",
+    "type": "Acidente do trabalho",
+    "rat_number": "RAT 00-00",
+    "injury": "PREENCHER",
+    "status": "PREENCHER",
+    "release": "PREENCHER",
+    "category": 3,
+    "narrative": "PREENCHER",
+    "immediate_actions": "PREENCHER"
+  },
+  "route": {
+    "origin": "PREENCHER SOMENTE PARA TRAJETO",
+    "destination": "PREENCHER SOMENTE PARA TRAJETO",
+    "deviation": "PREENCHER SOMENTE PARA TRAJETO",
+    "direction": "PREENCHER SOMENTE PARA TRAJETO",
+    "transport": "PREENCHER SOMENTE PARA TRAJETO",
+    "third_parties": "PREENCHER SOMENTE PARA TRAJETO",
+    "police_report": "PREENCHER SOMENTE PARA TRAJETO",
+    "clarification": "PREENCHER SOMENTE PARA TRAJETO"
+  },
+  "investigation": {
+    "team": "PREENCHER",
+    "start": "DD/MM/AAAA",
+    "end": "DD/MM/AAAA",
+    "ishikawa": [
+      {"factor": "Mão de obra", "analysis": "PREENCHER"},
+      {"factor": "Máquina ou equipamento", "analysis": "PREENCHER"},
+      {"factor": "Método", "analysis": "PREENCHER"},
+      {"factor": "Material", "analysis": "PREENCHER"},
+      {"factor": "Meio ambiente", "analysis": "PREENCHER"},
+      {"factor": "Medição", "analysis": "PREENCHER"}
+    ],
+    "details": "PREENCHER",
+    "whys": ["PREENCHER", "PREENCHER", "PREENCHER", "PREENCHER", "PREENCHER"],
+    "root_cause": "PREENCHER",
+    "unsafe_act": "PREENCHER",
+    "unsafe_condition": "PREENCHER",
+    "containment_24h": "PREENCHER",
+    "potential": "PREENCHER",
+    "summary": "PREENCHER",
+    "behavioral_factor": "PREENCHER SOMENTE PARA TRAJETO",
+    "technical_factor": "PREENCHER SOMENTE PARA TRAJETO",
+    "climatic_factor": "PREENCHER SOMENTE PARA TRAJETO"
+  },
+  "actions": [
+    {"who": "PREENCHER", "status": "PREENCHER", "what": "PREENCHER", "how": "PREENCHER", "when": "PREENCHER"},
+    {"who": "PREENCHER", "status": "PREENCHER", "what": "PREENCHER", "how": "PREENCHER", "when": "PREENCHER"},
+    {"who": "PREENCHER", "status": "PREENCHER", "what": "PREENCHER", "how": "PREENCHER", "when": "PREENCHER"}
+  ],
+  "signatures": {
+    "author": "PREENCHER",
+    "author_re": "PREENCHER",
+    "doctor": "PREENCHER",
+    "doctor_re": "PREENCHER",
+    "cipeiro": "PREENCHER",
+    "cipeiro_re": "PREENCHER",
+    "supervisor": "PREENCHER",
+    "supervisor_re": "PREENCHER",
+    "witnesses": "PREENCHER"
+  },
+  "images": {
+    "injury": "CAMINHO_CONFIRMADO",
+    "dynamics": "CAMINHO_DA_RECONSTITUICAO_ILUSTRATIVA",
+    "dynamics_kind": "generated_reconstruction",
+    "details": "CAMINHO_DA_ILUSTRACAO_DIDATICA_DETALHADA",
+    "details_kind": "generated_detail"
+  },
+  "communication": {
+    "severity": "PREENCHER",
+    "injury_caption": "PREENCHER",
+    "video_confirmed": false,
+    "video_metadata": "",
+    "video_link": ""
+  },
+  "approvals": {
+    "classification": false,
+    "technical_analysis": false,
+    "action_plan": false,
+    "root_cause_inconclusive": false
+  },
+  "evidence_ledger": {}
+}
