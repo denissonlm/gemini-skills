@@ -455,8 +455,8 @@ def fill_common(doc: Document, data: dict[str, Any], case_folder: Path) -> None:
         injury_cell,
         data["images"]["injury"],
         case_folder,
-        max_width=1.12,
-        max_height=1.0,
+        max_width=1.10,
+        max_height=0.95,
         clear=True,
     )
     add_caption(injury_cell, "Lesão:\n" + incident["injury"], size=6.1)
@@ -466,8 +466,8 @@ def fill_common(doc: Document, data: dict[str, Any], case_folder: Path) -> None:
         dynamics_cell,
         data["images"]["dynamics"],
         case_folder,
-        max_width=3.55,
-        max_height=3.75,
+        max_width=3.50,
+        max_height=3.50,
         clear=True,
     )
 
@@ -479,14 +479,14 @@ def fill_common(doc: Document, data: dict[str, Any], case_folder: Path) -> None:
             get_cell(doc, 0, 11, 3),
             data["images"]["details"],
             case_folder,
-            max_width=2.86,
-            max_height=2.45,
+            max_width=2.80,
+            max_height=2.30,
             clear=True,
         )
     else:
         set_cell_text(get_cell(doc, 0, 11, 3), investigation["details"], size=7.0, italic=True)
     for physical, why in enumerate(investigation["whys"], start=1):
-        set_cell_text(get_cell(doc, 0, 18, physical), why, size=7.0, italic=True)
+        set_cell_text(get_cell(doc, 0, 18, physical), why, size=6.2, italic=True)
 
     set_cell_text(get_cell(doc, 0, 19, 3), investigation["summary"], size=7.2, italic=True)
 
